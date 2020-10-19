@@ -28,12 +28,11 @@ EXAMPLE = (
     '-p "http://127.0.0.1:8080" --rpc'
 )
 
-BANNER = f"""\033[31m
+BANNER = f"""
    ___|  \\        / __ __|   \\  |     \\      _ \\
   |       \\  \\   /     |    |\\/ |    _ \\    |   |
   |   |    \\  \\ /      |    |   |   ___ \\   ___/
- \\____|    _/\\_/      _|   _|  _| _/    _\\ _|\033[0m
-                             version {VERSION}"""
+ \\____|    _/\\_/      _|   _|  _| _/    _\\ _|"""
 
 # Immutable global variables
 F_SUFFIX = ".cache.js"
@@ -54,6 +53,7 @@ RPC_FLAGS = UNKNOWN
 RPC_MODE = False
 CONTENT_TYPE = UNKNOWN
 FILTER = "" # Output filter
+COLOR_MODE = False
 
 # Variables for HTTP operations
 COOKIES = None
@@ -70,7 +70,8 @@ FORMAT = {
     "DEFAULT": "\033[0m",
     "HEADING": "\033[1m\033[1;34m",
     "ERROR": "\033[1m\033[31m",
-    "WARNING": "\033[1m\033[1;33m"
+    "WARNING": "\033[1m\033[1;33m",
+    "BANNER": "\033[1m\033[31m",
 }
 
 # Java object types
@@ -104,7 +105,7 @@ SIMPLE_TYPES = {
 ##################################################
 def writer(text="", fmt=FORMAT['DEFAULT']):
     """ Prints formatted text """
-    if fmt == FORMAT['DEFAULT']:
+    if fmt == FORMAT['DEFAULT'] or not COLOR_MODE:
         print(text)
     else:
         print(rf"{fmt}{text}{FORMAT['DEFAULT']}")
@@ -130,7 +131,8 @@ def is_number(value):
 ##################################################
 def present_banner():
     """ Prints the script's banner art """
-    writer(BANNER)
+    writer(BANNER, FORMAT["BANNER"])
+    writer(" " * 30 + f"version {VERSION}")
 
 def present_target(target):
     """ Prints the target resource being analysed """
@@ -971,6 +973,10 @@ def main():
         help="skips all and dumps the 're-formatted' state of the provided resource"
     )
     parser.add_argument(
+        "--color", action="store_true", default=False,
+        help="enables coloured console output"
+    )
+    parser.add_argument(
         "--backup", metavar="DIR", nargs='?', default=False,
         help="creates a local backup of retrieved code in -u/--url mode"
     )
@@ -981,6 +987,9 @@ def main():
 
     parser._optionals.title = "Arguments"
     args = parser.parse_args()
+
+    global COLOR_MODE
+    COLOR_MODE = args.color
 
     if not args.code and not args.quiet:
         present_banner()
