@@ -17,7 +17,7 @@ python -m pip install -r requirements.txt
 
 ```
 $ ./gwtmap.py -h
-usage: gwtmap.py [-h] [--version] -u <TARGET_URL> -F <FILE> [-b <BASE_URL>] [-p <PROXY>] [-c <COOKIES>] [-f <FILTER>] [--basic] [--rpc] [--probe] [--svc] [--code] [--backup [DIR]] [-q]
+usage: gwtmap.py [-h] [--version] [-u <TARGET_URL>] -F <FILE> [-b <BASE_URL>] [-p <PROXY>] [-c <COOKIES>] [-f <FILTER>] [--basic] [--rpc] [--probe] [--svc] [--code] [--color] [--backup [DIR]] [-q]
 
 Enumerates GWT-RPC methods from {hex}.cache.js permutation files
 
@@ -41,16 +41,16 @@ Arguments:
   --probe               sends an HTTP probe request to test each method returned in --rpc mode
   --svc                 displays enumerated service information, in addition to methods
   --code                skips all and dumps the 're-formatted' state of the provided resource
+  --color               enables console output colors
   --backup [DIR]        creates a local backup of retrieved code in -u/--url mode
   -q, --quiet           enables quiet mode (minimal output)
 
 Example: ./gwtmap.py -u "http://127.0.0.1/example/example.nocache.js" -p "http://127.0.0.1:8080" --rpc
-
 ```
 
 ## Usage
 
-Enumerate the methods of a remote application via it's bootstrap file and create a local backup of the code (selects permutation at random ):
+Enumerate the methods of a remote application via it's bootstrap file and create a local backup of the code (selects permutation at random):
 ```
 ./gwtmap.py -u http://192.168.22.120/olympian/olympian.nocache.js --backup
 ```
@@ -75,9 +75,9 @@ Filter output to a specific service or method:
 ./gwtmap.py -u http://192.168.22.120/olympian/olympian.nocache.js --filter AuthenticationService.login
 ```
 
-Generate RPC payloads for all methods of the filtered service
+Generate RPC payloads for all methods of the filtered service, with coloured output
 ```
-./gwtmap.py -u http://192.168.22.120/olympian/olympian.nocache.js --filter AuthenticationService --rpc
+./gwtmap.py -u http://192.168.22.120/olympian/olympian.nocache.js --filter AuthenticationService --rpc --color
 ```
 
 Automatically test (probe) the generate RPC request for the filtered service method
