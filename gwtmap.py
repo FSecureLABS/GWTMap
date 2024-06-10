@@ -888,7 +888,9 @@ def append_fragments(code, code_type, args):
         frag_url = f"{BASE_URL}{DEFERRED}{GWT_PERMUTATION}/{frag}{F_SUFFIX}"
         status, response = http_request(frag_url)
 
-        if status == 200:
+        if not response:
+            miss += 1
+        elif status == 200:
             if not args.code and not args.quiet:
                 writer(f"+ fragment : {frag_url}")
 
