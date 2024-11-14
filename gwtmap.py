@@ -545,7 +545,9 @@ def extract_method_signature(code, line):
 
     for _ in range(int((offset - 2) / 2)):
         parameter = parse_parameter(code, re.findall(param_pattern, code[line])[0])
-
+        if parameter in ["", None]:
+            parameter = "UNKNOWN"
+        
         # If List type found, assume ArrayList implementation of Strings
         if parameter.startswith(COMPLEX_TYPES["LIST"]):
             parameter += f"<{COMPLEX_TYPES['ARRAY']}/4159755760"
